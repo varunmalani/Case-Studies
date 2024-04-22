@@ -105,3 +105,32 @@ WHERE Sal1 >= Sal2 AND Sal2 >= Sal3
 ORDER BY 1;
 
 -- Optimized Approach
+WITH AvgSalaries AS (
+    SELECT company_location, work_year, AVG(salary_in_usd) avg_salary FROM salaries
+    WHERE work_year >= (YEAR(CURRENT_DATE()) - 2)
+    GROUP BY 1,2
+)
+SELECT 
+  company_location,
+  MAX(CASE WHEN work_year = (SELECT MAX(work_year) FROM salaries) THEN avg_salary END) AS 2024YR,
+  MAX(CASE WHEN work_year = (SELECT MAX(work_year) - 1 FROM salaries) THEN avg_salary END) AS 2023YR,
+  MAX(CASE WHEN work_year = (SELECT MAX(work_year) - 2 FROM salaries) THEN avg_salary END) AS 2022YR
+FROM AvgSalaries
+GROUP BY company_location
+HAVING 2024YR >= 2023YR AND 2023YR >= 2022YR
+ORDER BY 1;
+
+-- Picture yourself as a workforce strategist employed by a global HR startup. Your mission is to determine the percentage of only fully remote work for each experience level in 2021 and compare it with the corresponding figures for 2024. Highlighting any significant increases or decreases in remote work adoption over the years.
+SELECT Tb1.experience_level, Per2021, Per2024,
+IF(Per2024 > Per2021, "Increase", "Decrease") AS IncDec
+FROM 
+    (SELECT experience_level, (COUNT(*) / (SELECT COUNT(*) FROM salaries WHERE remote_ratio = 100 AND work_year = 2021)) * 100 AS Per2021 FROM salaries 
+    WHERE remote_ratio = 100 AND work_year = 2021
+    GROUP BY 1) Tb1 
+INNER JOIN
+    (SELECT experience_level, (COUNT(*) / (SELECT COUNT(*) FROM salaries WHERE remote_ratio = 100 AND work_year = 2024)) * 100 AS Per2024 FROM salaries 
+    WHERE remote_ratio = 100 AND work_year = 2024
+    GROUP BY 1) Tb2
+ON Tb1.experience_level = Tb2.experience_level;
+
+-- As a compensation specialist at a fortune 500 company, you're tasked with analyzing salary trends over time. Your objectie is to calculate the average salary increase percentage for each experience level and job title between the years 2023 and 2024, helping the company to stay competetive in the talent market.
