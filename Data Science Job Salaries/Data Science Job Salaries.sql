@@ -19,7 +19,7 @@ CREATE TABLE salaries (
 );
 
 -- INSERTING THE DATA INTO THE TABLE
-LOAD DATA LOCAL INFILE '/Users/varunmalani/Desktop/SQL Case Studies/salaries.csv'
+LOAD DATA LOCAL INFILE 'file_path.csv'
 INTO TABLE salaries
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
@@ -120,7 +120,7 @@ GROUP BY company_location
 HAVING 2024YR >= 2023YR AND 2023YR >= 2022YR
 ORDER BY 1;
 
--- Picture yourself as a workforce strategist employed by a global HR startup. Your mission is to determine the percentage of only fully remote work for each experience level in 2021 and compare it with the corresponding figures for 2024. Highlighting any significant increases or decreases in remote work adoption over the years.
+-- Picture yourself as a workforce strategist employed by a global HR startup. Your mission is to determine the percentage of only fully remote work for each experience level in 2021 and compare it with the corresponding figures for 2024. Highlighting any significant increases or decreases in remote work adoption over the years
 SELECT Tb1.experience_level, Per2021, Per2024,
 IF(Per2024 > Per2021, "Increase", "Decrease") AS IncDec
 FROM 
@@ -133,7 +133,7 @@ INNER JOIN
     GROUP BY 1) Tb2
 ON Tb1.experience_level = Tb2.experience_level;
 
--- As a compensation specialist at a fortune 500 company, you're tasked with analyzing salary trends over time. Your objectie is to calculate the average salary increase percentage for each experience level and job title between the years 2023 and 2024, helping the company to stay competetive in the talent market.
+-- As a compensation specialist at a fortune 500 company, you're tasked with analyzing salary trends over time. Your objectie is to calculate the average salary increase percentage for each experience level and job title between the years 2023 and 2024, helping the company to stay competetive in the talent market
 SELECT Tb1.experience_level, Tb1.job_title, AvgSalary2023, AvgSalary2024, ROUND(((AvgSalary2024 - AvgSalary2023) / AvgSalary2023) * 100, 2) AS YOY FROM
   (SELECT experience_level, job_title, AVG(salary_in_usd) AS AvgSalary2023
   FROM salaries
