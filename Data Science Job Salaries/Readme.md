@@ -1,8 +1,11 @@
 ## About the dataset
 
-work_year : The year the salary was paid.
-experience_level : The experience level in the job during the year with the following possible values: EN Entry-level / Junior MI Mid-level / Intermediate SE Senior-level / Expert EX Executive-level / Director
-employment_type : The type of employement for the role: PT Part-time FT Full-time CT Contract FL Freelance
+work_year : The year the salary was paid. 
+
+experience_level : The experience level in the job during the year with the following possible values: EN Entry-level / Junior MI Mid-level / Intermediate SE Senior-level / Expert EX Executive-level / Director <br>
+
+employment_type : The type of employement for the role: PT Part-time FT Full-time CT Contract FL Freelance <br>
+
 job_title : The role worked in during the year.
 salary : The total gross salary amount paid.
 salary_currency : The currency of the salary paid as an ISO 4217 currency code.
