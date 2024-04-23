@@ -134,3 +134,15 @@ INNER JOIN
 ON Tb1.experience_level = Tb2.experience_level;
 
 -- As a compensation specialist at a fortune 500 company, you're tasked with analyzing salary trends over time. Your objectie is to calculate the average salary increase percentage for each experience level and job title between the years 2023 and 2024, helping the company to stay competetive in the talent market.
+SELECT Tb1.experience_level, Tb1.job_title, AvgSalary2023, AvgSalary2024, ROUND(((AvgSalary2024 - AvgSalary2023) / AvgSalary2023) * 100, 2) AS YOY FROM
+  (SELECT experience_level, job_title, AVG(salary_in_usd) AS AvgSalary2023
+  FROM salaries
+  WHERE work_year = 2023
+  GROUP BY 1,2) Tb1
+INNER JOIN
+  (SELECT experience_level, job_title, AVG(salary_in_usd) AS AvgSalary2024
+  FROM salaries
+  WHERE work_year = 2024
+  GROUP BY 1,2) Tb2
+ON Tb1.experience_level = Tb2.experience_level AND Tb1.job_title = Tb2.job_title
+ORDER BY 5 DESC;
