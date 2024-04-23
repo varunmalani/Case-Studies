@@ -1,5 +1,5 @@
 <br>
-https://www.theknowledgeacademy.com/_files/images/Data_Scientist_Salary.png
+![Alt text](https://www.theknowledgeacademy.com/_files/images/Data_Scientist_Salary.png)
 <br>
 
 ## About the dataset
