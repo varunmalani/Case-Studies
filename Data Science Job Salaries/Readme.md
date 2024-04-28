@@ -1,5 +1,5 @@
 
-<img width="508" alt="data_science" src="https://github.com/varunmalani/Case-Studies/assets/51241123/a687d72f-f726-45a0-b174-84be875a790c">
+<img width="1000" alt="data_science" src="https://github.com/varunmalani/Case-Studies/assets/51241123/a687d72f-f726-45a0-b174-84be875a790c">
 
 ## About the dataset
 
