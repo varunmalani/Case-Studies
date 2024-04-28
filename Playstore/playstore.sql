@@ -64,6 +64,8 @@ SELECT * FROM playstore_backup;
 
 -- If we want to get to know if any event has happened then we will be using triggers
 -- First creating a table which stores the data where we can keep a track as to which app price was updated and at what time
+DROP TABLE IF EXISTS app_price_change;
+
 CREATE TABLE app_price_change(
     App VARCHAR(255),
     OldPrice DECIMAL(4,2),
@@ -74,35 +76,68 @@ CREATE TABLE app_price_change(
 DELIMITER //
 CREATE TRIGGER app_price_change_trigger
 -- This is basically if there is an update in the price of the backup table then a row is inserted into app_price_change table
-AFTER UPDATE ON playstore_backup 
+DELIMITER //
+CREATE TRIGGER app_price_change_trigger
+AFTER UPDATE ON playstore_backup
 FOR EACH ROW
 BEGIN
-    INSERT INTO app_price_change(App, OldPrice, NewPrice, UpdatedTime)
-    VALUES(OLD.App, OLD.OldPrice, NEW.NewPrice, CURRENT_TIMESTAMP);
+    IF OLD.Price <> NEW.Price THEN
+        INSERT INTO app_price_change(App, OldPrice, NewPrice, UpdatedTime)
+        VALUES(OLD.App, OLD.Price, NEW.Price, CURRENT_TIMESTAMP);
+    END IF;
 END //
 DELIMITER ;
 
-DROP TRIGGER app_price_change_trigger
+UPDATE playstore_backup
+SET Price = 2.5
+WHERE App = 'Photo Editor & Candy Camera & Grid & ScrapBook'
+
+UPDATE playstore_backup
+SET Price = 3.2
+WHERE App = 'Photo Editor & Candy Camera & Grid & ScrapBook'
+
+SELECT * FROM playstore_backup
+WHERE App = 'Photo Editor & Candy Camera & Grid & ScrapBook'
+
+-- Now viewing the the changed price table
+SELECT * FROM app_price_change;
 
 -- your IT team have neutralize the threat,  however hacker have made some changes in the prices, but becasue of your measure you have noted the changes , now you want correct data to be inserted into the database.
 
+-- Drop the trigger as we do not need the trigger any more because the threat has been neutralized
+DROP TRIGGER app_price_change_trigger;
 
--- As a data person you are assigned the task to investigate the correlation between two numeric factors: app ratings and the quantity of reviews.
+UPDATE playstore_backup pb
+INNER JOIN app_price_change apc ON pb.App = apc.App 
+SET pb.Price = (SELECT OldPrice FROM app_price_change ORDER BY UpdatedTime LIMIT 1);
 
+SELECT * FROM playstore_backup
+WHERE App = 'Photo Editor & Candy Camera & Grid & ScrapBook'
 
--- Your boss noticed  that some rows in genres columns have multiple generes in them, which was creating issue when developing the  recommendor system from the data he/she asssigned you the task to clean the genres column and make two genres out of it, rows that have only one genre will have other column as blank.
+-- Your boss noticed  that some rows in genres columns have multiple generes in them, which was creating issue when developing the recommendor system from the data he/she asssigned you the task to clean the genres column and make two genres out of it, rows that have only one genre will have other column as blank.
 
+-- Here the total ; values is 1
+SELECT MAX(LENGTH(Genres) - LENGTH(REPLACE(Genres, ';', ''))) AS max_semicolon_count FROM playstore;
 
--- Your senior manager wants to know which apps are  not performing as par in their particular category, however he is not interested in handling too many files or list for every  category and he/she assigned  you with a task of creating a dynamic tool where he/she  can input a category of apps he/she  interested in and your tool then provides real-time feedback by displaying apps within that category that have ratings lower than the average rating for that specific category.
+SELECT *,
+CASE 
+	WHEN Genres LIKE '%;%' THEN SUBSTRING(Genres, 1, (LOCATE(';', Genres)) - 1)
+	ELSE Genres
+END AS Genres_1,
+CASE 
+	WHEN Genres LIKE '%;%' THEN SUBSTRING(Genres, (LOCATE(';', Genres)) + 1)
+	ELSE ''
+END AS Genres_2
+from playstore;
+
+-- Your senior manager wants to know which apps are not performing as par in their particular category, however he is not interested in handling too many files or list for every category and he/she assigned, your task is of creating a dynamic tool where he/she can input a category of apps he/she is interested in and your tool then provides real-time feedback by displaying apps within that category that have ratings lower than the average rating for that specific category.
+
 
 
 -- What is duration time and fetch time.
 -- Duration Time :- Duration time is how long  it takes system to completely understand the instructions given  from start to end  in proper order  and way.
--- Fetch Time :- Once the instructions are completed , fetch ttime is like the time it takes for  the system to hand back the results, it depend on how quickly  ths system Can find  and bring back what you asked for.            
+-- Fetch Time :- Once the instructions are completed , fetch time is like the time it takes for  the system to hand back the results, it depend on how quickly  ths system Can find  and bring back what you asked for.            
 -- if query is simple  and have  to show large valume of data, fetch time will be large, If query is complex duration time will be large.
 -- Duration Time: Imagine you type in your search query, such as "fiction books," and hit enter. The duration time is the period it takes for the system to process your request from the moment you hit enter until it comprehensively understands what you're asking for and how to execute it. This includes parsing your query,  analyzing keywords, and preparing to fetch the relevant data.
 -- Fetch Time: Once the system has fully understood your request, it begins fetching the results. Fetch time refers to the time it takes for the system to retrieve and present the search results back to you.
 -- For instance, if your query is straightforward but requires fetching a large volume of data (like all fiction books in the library), the fetch time may be prolonged as the system sifts through extensive records to compile the results. Conversely, if your query is complex involving multiple criteria or parameters, the duration time might be longer as the system processes the intricacies of your request before initiating the fetch process.
-
-
-
