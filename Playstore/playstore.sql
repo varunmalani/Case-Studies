@@ -23,14 +23,14 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
--- You're working as a market analyst for a mobile app development company. Your task is to identify the most promising categories(TOP 5) for launching new free apps based on their average ratings.
+-- You're working as a market analyst for a mobile app development company. Your task is to identify the most promising categories (TOP 5) for launching new free apps based on their average ratings.
 SELECT Category, ROUND(AVG(rating), 2) AS AvgRating FROM playstore
 GROUP BY Category
 ORDER BY 2 DESC
 LIMIT 5;
 
 
---  As a business strategist for a mobile app company, your objective is to pinpoint the three categories that generate the most revenue from paid apps. This calculation is based on the product of the app price and its number of installations.
+--  As a business strategist for a mobile app company, your objective is to pin-point the 3 categories that generate the most revenue from paid apps. This calculation is based on the product of the app price and its number of installations.
 SELECT Category, ROUND(SUM(Installs * Price), 2) AS TotalRevenue FROM playstore
 WHERE Type = 'Paid'
 GROUP BY 1
@@ -38,14 +38,14 @@ ORDER BY 2 DESC
 LIMIT 3;
 
 
--- As a data analyst for a gaming company, you're tasked with calculating the percentage of games within each category. This information will help the company understand the distribution of gaming apps across different categories
+-- As a data analyst for a gaming company, you're tasked with calculating the percentage of games within each category. This information will help the company understand the distribution of gaming apps across different categories.
 SELECT *, ROUND((AvgCnt / (SELECT COUNT(*) FROM playstore)), 2) * 100 AS AvgMraketShare FROM
     (SELECT Category, COUNT(*) AS AvgCnt FROM playstore
     GROUP BY Category) Tb1
 ORDER BY 2 DESC;
 
 
--- As a data analyst at a mobile app-focused market research firm, you'll recommend whether the company should develop paid or free apps for each category based on the  ratings of that category.
+-- As a data analyst at a mobile app-focused market research firm, you'll recommend whether the company should develop paid or free apps for each category based on the ratings of that category.
 SELECT Category, Type, AvgRating FROM
     (SELECT Category, Type, ROUND(AVG(Rating) , 2) AS AvgRating,
     DENSE_RANK() OVER (PARTITION BY Category ORDER BY  ROUND(AVG(Rating) , 2) DESC) AS RatRank
@@ -54,7 +54,7 @@ SELECT Category, Type, AvgRating FROM
 WHERE RatRank = 1;
 
 
--- Suppose you're a database administrator, your databases have been hacked  and hackers are changing price of certain apps on the database , its taking long for IT team to neutralize the hack , however you as a responsible manager  don't want your data to be changed, create some measures where the changes in price can be recorded as you cant stop hackers from making changes
+-- Suppose you're a database administrator, your databases have been hacked and hackers are changing the price of certain apps on the database, its taking long for IT team to neutralize the hack, however you as a responsible manager don't want your data to be changed. Create some measures where the changes in price can be recorded as you cant stop hackers from making changes.
 
 -- Creating a duplicate table which stores all the values of playstore
 CREATE TABLE playstore_backup AS
@@ -102,7 +102,7 @@ WHERE App = 'Photo Editor & Candy Camera & Grid & ScrapBook'
 -- Now viewing the the changed price table
 SELECT * FROM app_price_change;
 
--- your IT team have neutralize the threat,  however hacker have made some changes in the prices, but becasue of your measure you have noted the changes , now you want correct data to be inserted into the database.
+-- Your IT team have neutralized the threat, however hackers have made some changes in the prices, but becasue of your measure you have noted the changes, now you want correct data to be inserted into the database.
 
 -- Drop the trigger as we do not need the trigger any more because the threat has been neutralized
 DROP TRIGGER app_price_change_trigger;
@@ -114,7 +114,7 @@ SET pb.Price = (SELECT OldPrice FROM app_price_change ORDER BY UpdatedTime LIMIT
 SELECT * FROM playstore_backup
 WHERE App = 'Photo Editor & Candy Camera & Grid & ScrapBook'
 
--- Your boss noticed  that some rows in genres columns have multiple generes in them, which was creating issue when developing the recommendor system from the data he/she asssigned you the task to clean the genres column and make two genres out of it, rows that have only one genre will have other column as blank.
+-- Your boss noticed  that some rows in genres columns have multiple generes in them, which was creating issue when developing the recommendor system from the data, he asssigned you the task to clean the genres column and make two genres out of it, rows that have only one genre will have other column as blank.
 
 -- Here the total ; values is 1
 SELECT MAX(LENGTH(Genres) - LENGTH(REPLACE(Genres, ';', ''))) AS max_semicolon_count FROM playstore;
@@ -130,7 +130,7 @@ CASE
 END AS Genres_2
 from playstore;
 
--- Your senior manager wants to know which apps are not performing as par in their particular category, however he is not interested in handling too many files or list for every category and he/she assigned, your task is of creating a dynamic tool where he/she can input a category of apps he/she is interested in and your tool then provides real-time feedback by displaying apps within that category that have ratings lower than the average rating for that specific category.
+-- Your senior manager wants to know which apps are not performing as par in their particular category, however he is not interested in handling too many files or list for every category and he assigned, your task is of creating a dynamic tool where he can input a category of apps he is interested in and your tool that provides real-time feedback by displaying apps within that category that have ratings lower than the average rating for that specific category.
 DELIMITER //
 CREATE PROCEDURE CatRatLow (IN Cat VARCHAR(255))
 BEGIN
