@@ -1,5 +1,5 @@
 
-<img width="740" alt="Screenshot 2024-04-29 at 1 24 55 AM" src="https://github.com/varunmalani/Case-Studies/assets/51241123/b357435e-6a2d-4ff2-9055-a460f28f9735">
+<img width="1000" alt="Screenshot 2024-04-29 at 1 24 55 AM" src="https://github.com/varunmalani/Case-Studies/assets/51241123/b357435e-6a2d-4ff2-9055-a460f28f9735">
 
 ## About the dataset
 
