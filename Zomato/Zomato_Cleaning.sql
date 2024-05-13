@@ -1,5 +1,3 @@
--- https://www.kaggle.com/datasets/sanjanchaudhari/zomato-data
-
 CREATE TABLE zomato (
 	a INTEGER NOT NULL, 
 	name VARCHAR(255) NOT NULL, 
@@ -51,5 +49,70 @@ PREPARE smt FROM  @ZomatoTblSummary;
 EXECUTE  smt ;
 DEALLOCATE  PREPARE smt;
 
+-- Newly opened restaurants where customers have not left any reviews
+SELECT * FROM zomato
+WHERE rating = 0.0 AND dish_liked = 'NA' AND votes = 0;
 
+UPDATE zomato
+SET dish_liked = 'No dishes tried'
+WHERE rating = 0.0 AND dish_liked = 'NA' AND votes = 0;
+
+UPDATE zomato
+SET dish_liked = 'No dishes liked yet :('
+WHERE dish_liked = 'NA';
+
+-- Over here we see that there are dishes liked, votes > 0 but there is no rating given, hence we will return the avg rating based on the location and rest_type
+SELECT * FROM zomato
+WHERE rating <> 0.0 AND (dish_liked <> 'No dishes tried' OR dish_liked <> 'NA') AND votes <> 0;
+
+SELECT location, rest_type, ROUND(AVG(rating),2) AS AvgRating FROM zomato
+WHERE rating <> 0.0 AND (dish_liked <> 'No dishes tried' OR dish_liked <> 'NA') AND votes <> 0
+GROUP BY 1,2
+ORDER BY 1 DESC,2;
+
+UPDATE zomato
+JOIN	(
+	SELECT location, rest_type, ROUND(AVG(rating),2) AS AvgRating FROM zomato
+	WHERE rating <> 0.0 AND (dish_liked <> 'No dishes tried' OR dish_liked <> 'NA') AND votes <> 0
+	GROUP BY location, rest_type
+	) AS a 
+ON zomato.location = a.location AND zomato.rest_type = a.rest_type
+SET zomato.rating = a.AvgRating
+WHERE zomato.votes <> 0 AND zomato.dish_liked <> 'NA'
+
+-- If votes are 0 then the rating should be 0
+SELECT * FROM zomato where votes = 0 and rating <> 0;
+
+UPDATE zomato
+SET rating = 0.0
+WHERE votes = 0;
+
+-- Replacing NA values in Type with the 1st value in the rest_type column
+SELECT type, rest_type, SUBSTRING_INDEX(rest_type, ',', 1) FROM zomato
+WHERE type = 'NA';
+
+UPDATE zomato
+SET type = SUBSTRING_INDEX(rest_type, ',', 1)
+WHERE type = 'NA'
+
+SELECT DISTINCT type FROM zomato ORDER BY 1;
+
+-- Replacing the relevant Types 
+-- Cafes -> Cafe
+-- Fine Dining, Casual Dining -> Dine-out
+-- Sweet Shop, Desserts -> Dessert Parlor
+
+UPDATE zomato
+SET type = 'Cafe'
+WHERE type = 'Cafes';
+
+UPDATE zomato
+SET type = 'Dine-out'
+WHERE type IN ('Fine Dining', 'Casual Dining');
+
+UPDATE zomato
+SET type = 'Dessert Parlor'
+WHERE type IN ('Sweet Shop', 'Desserts');
+
+-- Cleaned Zomato table
 SELECT * FROM zomato;
