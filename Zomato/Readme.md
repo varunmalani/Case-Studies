@@ -1,6 +1,6 @@
 <br>
 
-<img width="1000" alt="![zomato-1200x600](https://github.com/varunmalani/Case-Studies/assets/51241123/79051903-fac4-4166-b382-2aca259970dd)">
+<img width="1000" alt="<img width="358" alt="Screenshot 2024-05-17 at 10 52 23 AM" src="https://github.com/varunmalani/Case-Studies/assets/51241123/c7fbd993-4b12-4c80-a552-88c0a12e7396">">
 
 <br>
 
