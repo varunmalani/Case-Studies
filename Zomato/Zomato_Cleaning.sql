@@ -34,7 +34,7 @@ WHERE TABLE_NAME = 'zomato'
 -- We do not required column a, hence we can drop the column
 ALTER TABLE zomato DROP COLUMN a;
 
--- Replace the BLANK with suitable values
+-- Getting the count of blank values for all the columns (just like the summary table which we use in pandas)
 SELECT GROUP_CONCAT(
 	CONCAT('SUM(CASE WHEN `', COLUMN_NAME, '`='''' THEN 1 ELSE 0 END) AS `', COLUMN_NAME, '`')
 ) INTO @ZomatoTblSummary
@@ -49,6 +49,7 @@ PREPARE smt FROM  @ZomatoTblSummary;
 EXECUTE  smt ;
 DEALLOCATE  PREPARE smt;
 
+-- Replace the BLANK with suitable values
 -- Newly opened restaurants where customers have not left any reviews
 SELECT * FROM zomato
 WHERE rating = 0.0 AND dish_liked = 'NA' AND votes = 0;
