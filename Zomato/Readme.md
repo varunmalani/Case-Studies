@@ -1,3 +1,7 @@
+<br>
+![zomato-1200x600](https://github.com/varunmalani/Case-Studies/assets/51241123/a01c93d7-0b12-47a0-8bba-2774598776a2)
+<br>
+
 Zomato🍕🍮 is a popular online platform and mobile app that helps you find restaurants, cafes, and food outlets. It offers a complete database of eateries in many cities around the world. Here’s what you can do with Zomato: <br>
 
 🔍 Search for Restaurants: Look for places to eat based on your preferences like cuisine type, price range, and location.
