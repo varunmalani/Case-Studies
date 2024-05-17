@@ -59,5 +59,3 @@ cuisines : What are the different type of variety of fodd available at the resta
 apporx_cost : What is the approx cost for one person in that restaurant. <br>
 
 Type : What is the category in which the food will be served. <br>
-
-## Cleaning the data can be viewed in each step of the sql query
